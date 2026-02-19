@@ -1,0 +1,130 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+//ABSTRACTION
+class IPerson {
+public:
+    virtual void displayDetails() = 0;
+    virtual string getGrade() = 0;
+    virtual ~IPerson() {}
+};
+
+// ENCAPSULATION 
+class Student : public IPerson {
+private:
+    int studentID;
+    string name;
+    string course;
+    int marks;
+
+public:
+    Student(int sd, string n, string c, int m) {// constructor
+        studentID = sd;
+        name = n;
+        course = c;
+        marks = m;
+    }
+
+    void setStudentID(int sd) {
+        studentID = sd;
+    }
+    int getStudentID() {
+        return studentID;
+    }
+
+    void setName(string n) {
+        name = n;
+    }
+    string getName() {
+        return name;
+    }
+
+    void setCourse(string c) {
+        course = c;
+    }
+    string getCourse() {
+        return course;
+    }
+
+    void setMarks(int m) {
+        marks = m;
+    }
+    int getMarks() {
+        return marks;
+    }
+
+    // POLYMORPHISM 
+    void displayDetails() override {
+        cout << "ID: " << studentID << endl;
+        cout << "Name: " << name << endl;
+        cout << "Course: " << course << endl;
+        cout << "Marks: " << marks << endl;
+        cout << "Grade: " << getGrade() << endl;
+    }
+
+    string getGrade() override {
+        if (marks >= 80) return "A"; //if else statement
+        else if (marks >= 70) return "B";
+        else if (marks >= 60) return "C";
+        else if (marks >= 50) return "D";
+        else if (marks >= 40) return "E";
+        else return "Fail";
+    }
+};
+
+
+class Application {
+private:
+    Student* students[100];
+    int count;
+
+public:
+    Application() {
+        count = 0;
+    }
+
+    void addStudent(int id, string name, string course, int marks) {
+        if (count < 100) {
+            students[count] = new Student(id, name, course, marks);
+            count++;
+            cout << "Student added!\n\n";
+        }
+    }
+
+    void showAllStudents() {
+        cout << "ALL STUDENTS\n";
+        for (int i = 0; i < count; i++) {
+            students[i]->displayDetails();
+            cout << "\n";
+        }
+    }
+
+    void showStudentGrades() {
+        cout << "GRADING\n";
+        for (int i = 0; i < count; i++) {//for loop
+            cout << students[i]->getName() << ": "
+                << students[i]->getGrade() << endl;
+        }
+    }
+
+    ~Application() {//destructor
+        for (int i = 0; i < count; i++) {
+            delete students[i];
+        }
+    }
+};
+
+
+int main() {
+    Application app;// Object app
+
+    app.addStudent(102331, "Dex", "BIRD", 85);
+    app.addStudent(1454402, "Arsene", "Quant Finance", 72);
+    app.addStudent(10345663, "Mitch", "Mech Engineering", 65);
+
+    app.showAllStudents();
+    app.showStudentGrades();
+
+    return 0;
+}
